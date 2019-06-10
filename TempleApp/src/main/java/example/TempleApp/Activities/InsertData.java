@@ -21,6 +21,8 @@ import org.json.JSONObject;
 import example.TempleApp.JSON_API.Controller;
 import example.TempleApp.R;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by Chromicle.
  */
@@ -56,7 +58,6 @@ public class InsertData extends AppCompatActivity {
                         totalLayout.setVisibility(View.VISIBLE);
                         poojaType.setVisibility(View.GONE);
                         moneyDonated.setVisibility(View.VISIBLE);
-                        id = "DON";
                         flag = 0;
                         Toast.makeText(getBaseContext(), "Selected To Donate Money", Toast.LENGTH_LONG).show();
                         break;
@@ -64,7 +65,6 @@ public class InsertData extends AppCompatActivity {
                         totalLayout.setVisibility(View.VISIBLE);
                         moneyDonated.setVisibility(View.GONE);
                         poojaType.setVisibility(View.VISIBLE);
-                        id = "REG";
                         flag = 1;
                         Toast.makeText(getBaseContext(), "Selected To Register New Pooja", Toast.LENGTH_LONG).show();
                         break;
@@ -79,6 +79,7 @@ public class InsertData extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //is chkIos checked?
+                id = uid1ET.getText().toString();
                 if (((CheckBox) v).isChecked()) {
                     paidCheck = "PAID";
 
@@ -89,23 +90,27 @@ public class InsertData extends AppCompatActivity {
             }
         });
 
+            insert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    id = uid1ET.getText().toString();
+                    name = nameET.getText().toString();
+                    if (id.length() == 0) {
+                        Toast.makeText(getBaseContext(), "Please enter a valid user ID", Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        if (flag == 1) {
+                            poojaTyp = String.valueOf(poojaType.getSelectedItem());
 
-        insert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                id = id + uid1ET.getText().toString();
-                name = nameET.getText().toString();
-                if (flag == 1) {
-                    poojaTyp = String.valueOf(poojaType.getSelectedItem());
-
-                    overall = poojaTyp + getResources().getString(R.string.empty) + name + getResources().getString(R.string.empty) + paidCheck;
-                } else {
-                    money = moneyDonated.getText().toString();
-                    overall = money + getResources().getString(R.string.empty) + name + getResources().getString(R.string.empty) + paidCheck;
+                            overall = poojaTyp + getResources().getString(R.string.empty) + name + getResources().getString(R.string.empty) + paidCheck;
+                            new InsertDataActivity().execute();
+                        } else {
+                            money = moneyDonated.getText().toString();
+                            overall = money + getResources().getString(R.string.empty) + name + getResources().getString(R.string.empty) + paidCheck;
+                            new InsertDataActivity().execute();
+                        }
+                    }
                 }
-
-                new InsertDataActivity().execute();
-            }
         });
     }
 
@@ -116,8 +121,8 @@ public class InsertData extends AppCompatActivity {
         int jIndex;
         int x;
 
-        String result = null;
 
+        String result = null;
 
         @Override
         protected void onPreExecute() {
